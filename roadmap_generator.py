@@ -1,42 +1,52 @@
-# roadmap_generator.py
-
 import os
 from dotenv import load_dotenv
 import google.generativeai as genai
+from typing import Optional
 
 load_dotenv()
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-
-model = genai.GenerativeModel(model_name="models/gemini-2.0-flash")
 
 def generate_roadmap(role: str, experience: str, weeks: int) -> str:
-    prompt = f"""
-You are a professional tech mentor.
+    """
+    Generates a skill development roadmap using Gemini API
+    """
+    try:
+        genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+        model = genai.GenerativeModel(model_name="models/gemini-2.0-flash")
 
-Create a **{weeks}-week skill development roadmap** for someone aiming to become a **{role}**. The person is currently at a **{experience}** level.
+        prompt = f"""
+You are an expert curriculum designer.
 
-Break the roadmap week-wise, with clear tasks, technologies, and learning goals. Ensure each week is practical and builds upon the previous.
+Create a structured {weeks}-week skill development roadmap for a person learning to become a **{role}** at **{experience}** level.
 
-Include:
-- Tools/Technologies to learn
-- Concepts to master
-- Project ideas (as milestones)
-- Optional resources or certifications
-
-The response should be well-structured like:
+Format it **exactly like this** using Markdown:
 
 ### Week 1
-- Task 1
-- Task 2
+**Topic**: [Topic Title]
 
-### Week 2
-- Task 1
-...
+**Concepts**:
+- Concept 1
+- Concept 2
 
-Make it skimmable, engaging, and professional.
+**Practice**:
+- Practice Task 1
+- Practice Task 2
+
+**Resources**:
+- Resource Title 1 - (https://resource-link.com)
+- Resource Title 2
+
+Rules to follow:
+1. Each week must begin with `### Week X` followed by `**Topic**: ...` on the next line.
+2. Write section headers exactly as: `**Concepts**:`, `**Practice**:`, `**Resources**:` — bold, colon, new line.
+3. Use `-` (dash) for bullet points with no extra spacing or indentation.
+4. Do not include extra markdown like blockquotes, headers (##, ### inside sections), tables, or inline code.
+5. Keep formatting simple and consistent across all weeks.
+
+Your output should be clean and directly renderable in a web UI.
 """
-    try:
+
         response = model.generate_content(prompt)
         return response.text
+
     except Exception as e:
-        return f"❌ Error generating roadmap: {e}"
+        return f"Error generating roadmap: {str(e)}"
