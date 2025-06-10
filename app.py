@@ -1,6 +1,6 @@
 import streamlit as st
 from roadmap_generator import generate_roadmap
-from scraper.course_scraper import get_free_courses
+from scraper.course_scraper import get_coursera_courses
 from scraper.project_scraper import get_project_ideas
 from scraper.resource_scraper import get_community_resources
 from utils.helper import validate_input
@@ -123,8 +123,7 @@ def main():
         submitted = st.form_submit_button("Generate Roadmap")
 
     if submitted:
-        # Changed from [3, 1] to [2, 1] ratio for better balance
-        col_roadmap, col_resources = st.columns([2, 1])  # Now 66% roadmap, 33% resources
+        col_roadmap, col_resources = st.columns([2, 1])  # 66% roadmap, 33% resources
         
         roadmap = generate_roadmap(role, experience, weeks)
 
@@ -138,7 +137,7 @@ def main():
             # Added container with padding for better spacing
             with st.container():
                 with st.expander("🎓 Recommended Courses", expanded=True):
-                    courses = get_free_courses(role)
+                    courses = get_coursera_courses(role)
                     for course in courses[:3]:
                         st.markdown(f"""
                         <div class="resource-card">
@@ -159,7 +158,7 @@ def main():
 
                 with st.expander("👥 Community Resources", expanded=True):
                     resources = get_community_resources(role)
-                    for resource in resources[:2]:
+                    for resource in resources[:3]:
                         st.markdown(f"""
                         <div class="resource-card">
                             <b>{resource['type']}:</b> {resource['name']}<br>
