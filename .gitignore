@@ -1,2 +1,21 @@
-.env
+# Bytecode and cache
+__pycache__/
+*.py[cod]
+
+# Virtual environment
 venv/
+.venv/
+
+# Environment variables
+.env
+
+# VSCode/IDE configs
+.vscode/
+.idea/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Logs or temp files
+*.log
